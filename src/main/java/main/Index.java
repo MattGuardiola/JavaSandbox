@@ -14,11 +14,24 @@ public class Index {
         System.out.println("How many tickets would you like to buy?");
         int ticketNumber = scanner.nextInt();
         customers.add(new Customer(name,ticketNumber));
+        System.out.println(name + ", you are number " + customers.size() + " in line. You are purchasing " + ticketNumber + " tickets");
         return new Customer(name,ticketNumber);
     }
 
-    public static void addCustomer(Customer customer, ArrayList<Customer> customers){
-        System.out.println(customer.getName() + ", you are number " + 1 + " in line. You are purchasing " + customer.getTicketNumber() + " tickets");
+
+    public static void buyAnotherTicket(ArrayList<Customer> customers){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Would someone else like to buy tickets?");
+        String choice = scanner.nextLine().toLowerCase();
+        if(choice.equals("yes")){
+            buyTicket(customers);
+            buyAnotherTicket(customers);
+        } else if (choice.equals("no")){
+            System.out.println("Goodbye...");
+        } else {
+            System.out.println("Not a valid entry");
+            buyAnotherTicket(customers);
+        }
     }
 
 
@@ -30,6 +43,8 @@ public class Index {
         ArrayList<Customer> customers = new ArrayList<>();
 
         buyTicket(customers);
+        buyAnotherTicket(customers);
+
 
         System.out.println(customers);
 
