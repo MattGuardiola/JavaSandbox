@@ -1,8 +1,8 @@
 package main;
 
 public class Customer {
-    public String name;
-    public int ticketNumber;
+    private String name;
+    private int ticketNumber;
 
     public Customer(String name, int ticketNumber) {
         this.name = name;
