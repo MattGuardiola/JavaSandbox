@@ -5,6 +5,44 @@ import java.util.Scanner;
 
 public class Index {
 
+    public static void printLogo(){
+        System.out.println("""
+                ,--------.,--.      ,--.            ,--.             ,------. ,--.                             \s
+                '--.  .--'`--' ,---.|  |,-. ,---. ,-'  '-. ,---.     |  .--. '|  | ,---.  ,--,--. ,---.  ,---. \s
+                   |  |   ,--.| .--'|     /| .-. :'-.  .-'(  .-'     |  '--' ||  || .-. :' ,-.  |(  .-' | .-. :\s
+                   |  |   |  |\\ `--.|  \\  \\\\   --.  |  |  .-'  `)    |  | --' |  |\\   --.\\ '-'  |.-'  `)\\   --.\s
+                   `--'   `--' `---'`--'`--'`----'  `--'  `----'     `--'     `--' `----' `--`--'`----'  `----'\s
+                                                                                                               \s
+                """);
+    }
+
+
+    public static void mainMenu(ArrayList<Event> events, ArrayList<Customer> customers){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What would you like to do?");
+        System.out.println(" ");
+        System.out.println("1: Add an event");
+        System.out.println("2: Purchase Tickets for an event");
+        System.out.println("3: Exit");
+        System.out.println(" ");
+        System.out.println("Please select a number between 1 and 3");
+        int menuChoice = scanner.nextInt();
+        if(menuChoice == 1){
+            createEvent(events);
+            createAnotherEvent(events,customers);
+        } else if (menuChoice == 2){
+            buyTicket(customers);
+            buyAnotherTicket(events, customers);
+        } else if(menuChoice == 3){
+            System.out.println("Goodbye...");
+        } else {
+            System.out.println("Not a valid entry");
+            mainMenu(events, customers);
+        }
+    }
+
+
+
 
     public static Event createEvent(ArrayList<Event> events){
        Scanner scanner = new Scanner(System.in);
@@ -19,6 +57,20 @@ public class Index {
         return new Event(name, price, availability);
     }
 
+    public static void createAnotherEvent(ArrayList<Event> events, ArrayList<Customer> customers){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Would you like to schedule another event");
+        String choice = scanner.nextLine().toLowerCase();
+        if(choice.equals("yes")){
+            createEvent(events);
+            createAnotherEvent(events, customers);
+        } else if (choice.equals("no")){
+            mainMenu(events, customers);
+        } else {
+            System.out.println("Not a valid entry");
+            buyAnotherTicket(events, customers);
+        }
+    }
 
 
 
@@ -34,18 +86,18 @@ public class Index {
     }
 
 
-    public static void buyAnotherTicket(ArrayList<Customer> customers){
+    public static void buyAnotherTicket(ArrayList<Event> events, ArrayList<Customer> customers){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Would someone else like to buy tickets?");
         String choice = scanner.nextLine().toLowerCase();
         if(choice.equals("yes")){
             buyTicket(customers);
-            buyAnotherTicket(customers);
+            buyAnotherTicket(events, customers);
         } else if (choice.equals("no")){
-            System.out.println("Goodbye...");
+            mainMenu(events, customers);
         } else {
             System.out.println("Not a valid entry");
-            buyAnotherTicket(customers);
+            buyAnotherTicket(events, customers);
         }
     }
 
@@ -58,15 +110,11 @@ public class Index {
         ArrayList<Event> events = new ArrayList<>();
         ArrayList<Customer> customers = new ArrayList<>();
 
-//        buyTicket(customers);
-//        buyAnotherTicket(customers);
-
-        createEvent(events);
+        printLogo();
+        mainMenu(events,customers);
 
         System.out.println(events);
         System.out.println(customers);
-
-
 
     }
 }
