@@ -78,41 +78,50 @@ public class Index {
 
 
 
-    public static Customer buyTicket(ArrayList<Event> events,ArrayList<Customer> customers){
+    public static Customer buyTicket(ArrayList<Event> events, ArrayList<Customer> customers) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Which event would you like to purchase tickets for?");
-        System.out.println(" ");
-        for (Event event: events) {
+        System.out.println();
+
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
             System.out.println(event.getName());
         }
-        System.out.println(" ");
+
+        System.out.println();
         String chosenEvent = scanner.nextLine();
-        for (int i = events.size() -1; i >= 0; i--){
-            if(events.get(i).getName().contains(chosenEvent)){
-                System.out.println("You would like to purchase tickets for " + events.get(i).getName() + " for " + events.get(i).getPrice() + " each");
+
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            if (event.getName().equalsIgnoreCase(chosenEvent)) {
+                System.out.println("You would like to purchase tickets for " + event.getName() + " for " + event.getPrice() + " each");
                 System.out.println("Is this correct?");
+                String eventConfirmation = scanner.nextLine();
+
+                if (eventConfirmation.equalsIgnoreCase("yes")) {
+                    System.out.println("What is your name?");
+                    String name = scanner.nextLine();
+                    System.out.println("How many tickets would you like to buy?");
+                    int ticketNumber = scanner.nextInt();
+                    events.add(new Event(events.get(i).getName(), events.get(i).getPrice(), events.get(i).getAvailability() - ticketNumber));
+                    events.remove(events.get(i));
+                    customers.add(new Customer(name, ticketNumber));
+                    System.out.println(name + ", you are number " + customers.size() + " in line. You are purchasing " + ticketNumber + " tickets");
+                    return new Customer(name, ticketNumber);
+                } else {
+                    System.out.println("Purchase cancelled");
+                    buyTicket(events,customers);
+                    return null;
+                }
             }
         }
-        String eventConfirmation = scanner.nextLine();
-        if (eventConfirmation.equals("yes")){
-            System.out.println("What is your name?");
-            String name = scanner.nextLine();
-            System.out.println("How many tickets would you like to buy?");
-            int ticketNumber = scanner.nextInt();
-            customers.add(new Customer(name,ticketNumber));
-            System.out.println(name + ", you are number " + customers.size() + " in line. You are purchasing " + ticketNumber + " tickets");
-            return new Customer(name,ticketNumber);
-        } else if(eventConfirmation.equals("no")){
-            buyTicket(events, customers);
-            return null;
-        } else {
-            System.out.println("Not a valid entry");
-            buyTicket(events, customers);
-            return null;
-        }
 
+        System.out.println("Not a valid entry");
+        return null;
     }
+
+
 
 
     public static void buyAnotherTicket(ArrayList<Event> events, ArrayList<Customer> customers){
