@@ -23,7 +23,8 @@ public class Index {
         System.out.println(" ");
         System.out.println("1: Add an event");
         System.out.println("2: Purchase Tickets for an event");
-        System.out.println("3: Exit");
+        System.out.println("3: See a list of all events");
+        System.out.println("4: Exit");
         System.out.println(" ");
         System.out.println("Please select a number between 1 and 3");
         int menuChoice = scanner.nextInt();
@@ -31,9 +32,12 @@ public class Index {
             createEvent(events);
             createAnotherEvent(events,customers);
         } else if (menuChoice == 2){
-            buyTicket(customers);
+            buyTicket(events, customers);
             buyAnotherTicket(events, customers);
         } else if(menuChoice == 3){
+            printEvents(events);
+            mainMenu(events, customers);
+        } else if(menuChoice == 4){
             System.out.println("Goodbye...");
         } else {
             System.out.println("Not a valid entry");
@@ -74,15 +78,40 @@ public class Index {
 
 
 
-    public static Customer buyTicket(ArrayList<Customer> customers){
-        System.out.println("What is your name?");
+    public static Customer buyTicket(ArrayList<Event> events,ArrayList<Customer> customers){
         Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
-        System.out.println("How many tickets would you like to buy?");
-        int ticketNumber = scanner.nextInt();
-        customers.add(new Customer(name,ticketNumber));
-        System.out.println(name + ", you are number " + customers.size() + " in line. You are purchasing " + ticketNumber + " tickets");
-        return new Customer(name,ticketNumber);
+
+        System.out.println("Which event would you like to purchase tickets for?");
+        System.out.println(" ");
+        for (Event event: events) {
+            System.out.println(event.getName());
+        }
+        System.out.println(" ");
+        String chosenEvent = scanner.nextLine();
+        for (int i = events.size() -1; i >= 0; i--){
+            if(events.get(i).getName().contains(chosenEvent)){
+                System.out.println("You would like to purchase tickets for " + events.get(i).getName() + " for " + events.get(i).getPrice() + " each");
+                System.out.println("Is this correct?");
+            }
+        }
+        String eventConfirmation = scanner.nextLine();
+        if (eventConfirmation.equals("yes")){
+            System.out.println("What is your name?");
+            String name = scanner.nextLine();
+            System.out.println("How many tickets would you like to buy?");
+            int ticketNumber = scanner.nextInt();
+            customers.add(new Customer(name,ticketNumber));
+            System.out.println(name + ", you are number " + customers.size() + " in line. You are purchasing " + ticketNumber + " tickets");
+            return new Customer(name,ticketNumber);
+        } else if(eventConfirmation.equals("no")){
+            buyTicket(events, customers);
+            return null;
+        } else {
+            System.out.println("Not a valid entry");
+            buyTicket(events, customers);
+            return null;
+        }
+
     }
 
 
@@ -91,7 +120,7 @@ public class Index {
         System.out.println("Would someone else like to buy tickets?");
         String choice = scanner.nextLine().toLowerCase();
         if(choice.equals("yes")){
-            buyTicket(customers);
+            buyTicket(events, customers);
             buyAnotherTicket(events, customers);
         } else if (choice.equals("no")){
             mainMenu(events, customers);
@@ -102,6 +131,13 @@ public class Index {
     }
 
 
+    public static void printEvents(ArrayList<Event> events){
+        System.out.println(" ");
+        for (Event event: events) {
+            System.out.println(event.getName() + " has " + event.getAvailability() + " tickets available at " + event.getPrice() + "$ each" );
+        }
+        System.out.println(" ");
+    }
 
 
 
@@ -110,8 +146,11 @@ public class Index {
         ArrayList<Event> events = new ArrayList<>();
         ArrayList<Customer> customers = new ArrayList<>();
 
+        events.add(new Event("taylor swift", 23.99, 500));
+        events.add(new Event("garth brooks", 30, 450));
         printLogo();
         mainMenu(events,customers);
+
 
         System.out.println(events);
         System.out.println(customers);
